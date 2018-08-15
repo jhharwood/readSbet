@@ -1,0 +1,106 @@
+#include <iostream>
+#include <fstream>
+#include <math.h>
+#include <ctime>
+#include <cstdio>
+#include <iostream>
+#include <iomanip>
+
+#define FILE_NAME "sbet_RTX_NAD83_180808_1742_a.out"
+#define OUT_FILE "sbet_RTX_NAD83_180808_1742_a.txt"
+
+// Define a structure to read in the sbet
+struct SbetRecord
+{
+    double time;
+    double lat;
+    double lon;
+    double alt;
+    double ewspeed;
+    double nsspeed;
+    double vertspeed;
+    double roll;
+    double pitch;
+    double heading;
+    double wander;
+    double ewacc;
+    double nsacc;
+    double vertacc;
+    double xacc;
+    double yacc;
+    double zacc;
+}record;
+
+// Convert degrees to radians
+double radian_to_degrees(double rad)
+{
+    return rad * 180.0/M_PI;
+}
+
+// Print out a record
+void printRecord(SbetRecord record)
+{
+    std::cout << std::fixed << std::setprecision(17) << "Time:   " << record.time << "\n";
+    std::cout << std::fixed << std::setprecision(17) << "Latitude:  " << radian_to_degrees(record.lat) << "\n";
+    std::cout << std::fixed << std::setprecision(17) << "Longitude: " << radian_to_degrees(record.lon) << "\n";
+    std::cout << std::fixed << std::setprecision(17) << "Altitude: " << record.alt << "\n";
+    std::cout << std::fixed << std::setprecision(17) << "Roll: " << record.roll << "\n";
+    std::cout << std::fixed << std::setprecision(17) << "Pitch: " << record.pitch << "\n";
+    std::cout << std::fixed << std::setprecision(17) << "Heading: " << record.heading << "\n";
+}
+
+//int main(int argc, char* argv[])
+int main()
+{
+/*     // Check the number of parameters
+ *     if (argc < 2) {
+ *         // Tell the user how to run the program
+ *         std::cerr << "Usage: readSbet [sbet name]\n"
+ *                   << "Sbet name should be path to the sbet *.out file\n"
+ *                   << "Example Usage: readSbet.exe D:/path/to/myfile.out\n"
+ *                   << std::endl;
+ *         return 1;
+ *     }
+ */
+
+    std::clock_t start;
+    int duration;
+
+    start = std::clock();
+
+    // Read/Write Files
+    //const char *input = "D:/myIn.tif"
+    //const char *input = argv[1];
+
+    //char file;
+    std::ifstream file (FILE_NAME, std::ios::in | std::ios::binary);
+    if(!file.is_open())
+    {
+        std::cout << "Error in file opening..." << std::endl;
+        return 0;
+    }
+
+    std::ofstream out (OUT_FILE, std::ios::out | std::ios::app);
+    while (!file.eof())
+    {
+        file.read((char *)&record, sizeof(record));
+        // Print record information
+        //printRecord(record);
+        //std::cout << "\n";
+
+        //out.write((char*)&record,sizeof(record));
+        //out << record.time << "," << record.lat << "," << record.lon << record.alt << "\n";
+
+        out << std::fixed << std::setprecision(17) << record.time << "," << radian_to_degrees(record.lat) << "," << radian_to_degrees(record.lon) << "," << record.alt \
+        << record.roll << "," << record.pitch << "," << record.heading << std::endl;
+
+    }
+
+    duration = ( std::clock() - start ) / (int) CLOCKS_PER_SEC;
+    printf ( "Processing time is: %d seconds", duration);
+
+    file.close();
+    out.close();
+
+    return 0;
+}

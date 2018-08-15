@@ -1,0 +1,10 @@
+# depslib dependency file v1.0
+1534306467 source:d:\_programming\cpp\readsbet\main.cpp
+	<iostream>
+	<fstream>
+	<math.h>
+	<ctime>
+	<cstdio>
+	<iostream>
+	<iomanip>
+
